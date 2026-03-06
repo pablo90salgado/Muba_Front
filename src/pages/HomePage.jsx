@@ -17,9 +17,9 @@ export default function HomePage() {
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center px-3 py-2 hover:bg-[#232e47] rounded">
+              <Link to="/residentes/nuevo" className="flex items-center px-3 py-2 hover:bg-[#232e47] rounded">
                 Residentes
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#" className="flex items-center px-3 py-2 hover:bg-[#232e47] rounded">
