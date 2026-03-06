@@ -28,11 +28,20 @@ const roomBlocks = [
   },
 ];
 
+
 const bedColors = {
   ocupada: "bg-[#00C896]/12 border-[#00C896]/35 text-[#00C896]",
   disponible: "bg-[#8AADCC]/10 border-[#8AADCC]/35 text-[#8AADCC]",
   limpieza: "bg-[#F0A500]/12 border-[#F0A500]/35 text-[#F0A500]",
 };
+
+const occupancyLegend = [
+  { label: "Ocupadas", count: 12, pct: "60%", color: "#00C896" },
+  { label: "Disponibles", count: 4, pct: "20%", color: "#8AADCC" },
+  { label: "En limpieza", count: 2, pct: "10%", color: "#F0A500" },
+  { label: "Mantenimiento", count: 1, pct: "5%", color: "#FF5A5A" },
+  { label: "Reservadas", count: 1, pct: "5%", color: "#A78BFA" },
+];
 
 export default function DashboardCamasPage() {
   return (
@@ -99,8 +108,35 @@ export default function DashboardCamasPage() {
           <div className="space-y-3">
             <div className="rounded-xl border border-white/10 bg-[#132336] p-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8AADCC]">📊 Ocupación general</p>
-              <p className="mt-2 text-xl font-extrabold text-[#00C896]">60%</p>
-              <p className="text-xs text-[#5A7A96]">12 ocupadas · 4 disponibles</p>
+
+              <div className="mt-2 flex items-center justify-center">
+                <div className="relative flex h-[120px] w-[120px] items-center justify-center">
+                  <svg width="110" height="110" viewBox="0 0 110 110" className="drop-shadow-[0_0_10px_rgba(0,200,150,0.22)]">
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="12" />
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#00C896" strokeWidth="12" strokeDasharray="158.3 105.6" strokeDashoffset="66" strokeLinecap="round" />
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#8AADCC" strokeWidth="12" strokeDasharray="52.8 210.1" strokeDashoffset="-92.3" strokeLinecap="round" />
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#F0A500" strokeWidth="12" strokeDasharray="26.4 237" strokeDashoffset="-145.1" strokeLinecap="round" />
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#FF5A5A" strokeWidth="12" strokeDasharray="13.2 250.3" strokeDashoffset="-171.5" strokeLinecap="round" />
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#A78BFA" strokeWidth="12" strokeDasharray="13.2 250.3" strokeDashoffset="-184.7" strokeLinecap="round" />
+                  </svg>
+
+                  <div className="absolute text-center">
+                    <p className="text-2xl font-extrabold leading-none text-[#00C896]">60%</p>
+                    <p className="mt-0.5 text-[10px] text-[#5A7A96]">ocupación</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-1 space-y-1.5">
+                {occupancyLegend.map((item) => (
+                  <div key={item.label} className="flex items-center gap-2 text-xs">
+                    <span className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: item.color }} />
+                    <span className="flex-1 text-[#8AADCC]">{item.label}</span>
+                    <span className="font-mono text-sm font-semibold text-[#F0F6FF]">{item.count}</span>
+                    <span className="font-mono text-[10px] text-[#5A7A96]">{item.pct}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="rounded-xl border border-white/10 bg-[#132336] p-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8AADCC]">🔔 Novedades del día</p>
