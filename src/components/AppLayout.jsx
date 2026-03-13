@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { clearAuthSession, getAuthSession } from "../utils/auth";
 
 function SidebarItem({ to, icon, label, active, badge, demo }) {
   const baseClasses = "relative flex w-full items-center gap-2.5 rounded-md border px-2.5 py-2 text-left text-[12.5px] transition";
@@ -40,7 +42,23 @@ const MODULE_URLS = {
 };
 
 export default function AppLayout({ activeModule, title, actionLabel, children }) {
+  const navigate = useNavigate();
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const session = getAuthSession();
+  const userName = session?.email ? session.email.split("@")[0] : "M. Gonzalez";
+  const userRole = session?.role || "Admin";
+  const userInitials = userName
+    .split(/[\s._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "MG";
   const fakeUrl = MODULE_URLS[activeModule] || MODULE_URLS.dashboard;
+
+  const handleLogout = () => {
+    clearAuthSession();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-[#090F18] p-4 text-[#F0F6FF]">
@@ -82,12 +100,33 @@ export default function AppLayout({ activeModule, title, actionLabel, children }
           <div className="flex items-center gap-2">
             <button className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 text-xs text-[#8AADCC]">🔍</button>
             <button className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 text-xs text-[#8AADCC]">🔔</button>
-            <div className="flex items-center gap-2 rounded-md border border-white/10 bg-[#1A2F45] px-2 py-1">
-              <span className="flex h-6 w-6 items-center justify-center rounded-md border border-[#00C896]/25 bg-[#00C896]/10 text-[10px] font-bold text-[#00C896]">MG</span>
-              <div>
-                <p className="text-xs font-medium">M. González</p>
-                <p className="text-[10px] text-[#5A7A96]">Admin</p>
-              </div>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 rounded-md border border-white/10 bg-[#1A2F45] px-2 py-1"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-md border border-[#00C896]/25 bg-[#00C896]/10 text-[10px] font-bold text-[#00C896]">
+                  {userInitials}
+                </span>
+                <div className="text-left">
+                  <p className="text-xs font-medium">{userName}</p>
+                  <p className="text-[10px] text-[#5A7A96]">{userRole}</p>
+                </div>
+              </button>
+
+              {isUserMenuOpen ? (
+                <div className="absolute right-0 top-[calc(100%+8px)] z-20 w-[180px] rounded-md border border-white/10 bg-[#132336] p-1.5 shadow-[0_14px_30px_rgba(0,0,0,0.45)]">
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex w-full items-center justify-between rounded-md px-2.5 py-2 text-left text-xs text-[#FF8A8A] transition hover:bg-[#1A2F45]"
+                  >
+                    <span>Cerrar sesion</span>
+                    <span>↪</span>
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
